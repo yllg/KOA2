@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block title %}KOA2项目{{title}}{% endblock %}
+
+{% block head %}
+{% parent %}
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../scripts/index.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/systemjs/0.20.19/system.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <br>点赞图案共使用两个div绘制，#Thumb是拇指和手腕；#PraiseButton是剩下的拳头👊  部分；
+    <br>
+    <br>由于我mac上XAMPP启动默认端口是8080，所以request-promise配置项中uri带上了8080
+    <br>
+    <br>运行本项目：npm start
+    <br>
+    <br>三大测试：
+    <br>单元测试：karma start
+    <br>接口测试：npm run mochatest
+    <br>e2e测试：npm run e2etest
+    <br>
+    <br>自己完善的功能：
+    <br>重定向：根目录/跳转到/index/index
+    <br>容错处理：
+    <br>404跳到腾讯公益“找小孩”页面；
+    <br>500跳到一灯官网；
+    <div id="wrap">	
+        <div id="PraiseButton"></div>
+        <div id="Thumb"></div>
+        <span class="hide" id="animation">+1</span>
+    </div>
+    <script>
+        SystemJS.config({
+            baseURL:'./'
+            //用babel编译就不用system的babel插件了，systemjs只要cnd一个核心文件即可
+            // transpiler:'plugin-babel',
+            // map:{
+            //     'plugin-babel':'node_modules/systemjs-plugin-babel/plugin-babel.js',
+            //     'systemjs-babel-build':'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js'
+            // }
+        });
+        SystemJS.import('../scripts/index-es.js').then(m => {
+            //挂载到JQ上
+            $.extend({
+                PraiseButton: m.PraiseButton,
+                Thumb: m.Thumb
+            });
+            // 默认初始化
+            new $.PraiseButton().click();
+            new $.Thumb().click();
+
+            //传参，修改绑定的对象
+            // new $.PraiseButton($('#Thumb')).click();
+            // new $.Thumb($('#PraiseButton')).click();
+        });
+    </script>
+{% endblock %}
